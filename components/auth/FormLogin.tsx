@@ -5,16 +5,17 @@ import { signIn } from 'next-auth/react';
 import * as Yup from 'yup';
 import style from '@/styles/Form.module.css';
 import Input from '@/components/ui/Input';
-import MessageError from '@/components/ui/MessageError';
-import { HiAtSymbol, HiEye, HiEyeSlash } from 'react-icons/hi2';
+import { redirect } from 'next/navigation';
 import Image from 'next/image';
+import { HiAtSymbol, HiEye, HiEyeSlash } from 'react-icons/hi2';
+import MessageError from '@/components/ui/MessageError';
 import { hasError } from '@/utils/helper';
 
 const FormLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handlerSignIn = useCallback(async (provider: string) => {
-    signIn(provider, { callbackUrl: process.env.LOCAL_AUTH_URL });
+    signIn(provider, { callbackUrl: process.env.NEXT_PUBLIC_LOCAL_AUTH_URL });
   }, []);
 
   const form = useFormik({
@@ -26,8 +27,22 @@ const FormLogin = () => {
       email: Yup.string().email('Invalid email address').required('Required'),
       password: Yup.string().required('Required'),
     }),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async ({ email, password }) => {
+      const status = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+        callbackUrl: '/',
+      });
+
+      if (status?.error) {
+        form.setFieldError('email', status?.error);
+      }
+
+      if (status?.ok) {
+        form.resetForm();
+        redirect(status?.url ?? '/');
+      }
     },
   });
 

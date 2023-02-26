@@ -14,15 +14,18 @@ const Authenticated = ({ session }: IAuthProps) => {
       <h3 className="text-4xl font-bold">Authorized User - HomePage</h3>
 
       <div className="flex  flex-col md:flex-row w-2/3 md:w-2/6 justify-center items-center p-5 my-5 bg-slate-100 gap-5 rounded-md mx-auto">
-        <div className="rounded-full">
-          <Image
-            src={session.user?.image!}
-            className="rounded-full"
-            width="100"
-            height="100"
-            alt={session.user?.name!}
-          />
-        </div>
+        {!!session.user?.image && (
+          <div className="rounded-full">
+            <Image
+              src={session.user?.image}
+              className="rounded-full"
+              width="100"
+              height="100"
+              alt={session.user?.name!}
+            />
+          </div>
+        )}
+
         <div>
           <h5>{session.user?.name}</h5>
           <h5>{session.user?.email}</h5>

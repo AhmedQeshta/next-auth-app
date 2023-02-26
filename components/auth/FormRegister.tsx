@@ -7,6 +7,7 @@ import style from '@/styles/Form.module.css';
 import Input from '@/components/ui/Input';
 import MessageError from '@/components/ui/MessageError';
 import { hasError } from '@/utils/helper';
+import { redirect } from 'next/navigation';
 
 const FormRegister = () => {
   const [showPassword, setShowPassword] = useState({
@@ -29,8 +30,28 @@ const FormRegister = () => {
         .oneOf([Yup.ref('password')], 'Passwords must match')
         .required('Required'),
     }),
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async ({ username, email, password }) => {
+      const option = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+        }),
+      };
+
+      const data = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_AUTH_URL}/api/auth/signup`, option);
+      const res = await data.json();
+
+      if (res?.error) {
+        form.setFieldError('email', res?.error);
+        return;
+      }
+      form.resetForm();
+      redirect(`${process.env.NEXT_PUBLIC_LOCAL_AUTH_URL}`);
     },
   });
 
