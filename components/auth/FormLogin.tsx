@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import style from '@/styles/Form.module.css';
 import Input from '@/components/ui/Input';
 import { HiAtSymbol, HiEye, HiEyeSlash } from 'react-icons/hi2';
@@ -8,9 +8,11 @@ import { signIn } from 'next-auth/react';
 
 const FormLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const handlerSignIn = async (provider: string) => {
-    signIn(provider, { callbackUrl: 'http://localhost:3000/' });
-  };
+
+  const handlerSignIn = useCallback(async (provider: string) => {
+    signIn(provider, { callbackUrl: process.env.LOCAL_AUTH_URL });
+  }, []);
+
   return (
     <form className="flex flex-col gap-5">
       <div className={style.inputGroup}>
