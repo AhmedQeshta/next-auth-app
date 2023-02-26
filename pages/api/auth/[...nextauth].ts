@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
 
     // ...add more providers here
   ],
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.APP_NEXTAUTH_SECRET,
   // callbacks: {
   //   async signIn({ user }) {
   //     let isAllowedToSignIn = true;
