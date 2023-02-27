@@ -7,13 +7,14 @@ import style from '@/styles/Form.module.css';
 import Input from '@/components/ui/Input';
 import MessageError from '@/components/ui/MessageError';
 import { hasError } from '@/utils/helper';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const FormRegister = () => {
   const [showPassword, setShowPassword] = useState({
     password: false,
     confirmPassword: false,
   });
+  const router = useRouter();
 
   const form = useFormik({
     initialValues: {
@@ -50,8 +51,7 @@ const FormRegister = () => {
         form.setFieldError('email', res?.error);
         return;
       }
-      form.resetForm();
-      redirect(`${process.env.NEXT_PUBLIC_LOCAL_AUTH_URL}`);
+      router.push(`${process.env.NEXT_PUBLIC_LOCAL_AUTH_URL}`);
     },
   });
 

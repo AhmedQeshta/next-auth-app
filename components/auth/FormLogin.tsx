@@ -1,18 +1,20 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { signIn } from 'next-auth/react';
 import * as Yup from 'yup';
 import style from '@/styles/Form.module.css';
 import Input from '@/components/ui/Input';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { HiAtSymbol, HiEye, HiEyeSlash } from 'react-icons/hi2';
 import MessageError from '@/components/ui/MessageError';
 import { hasError } from '@/utils/helper';
+import useEmailLogin from '@/hooks/useEmailLogin';
 
 const FormLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handlerSignIn = useCallback(async (provider: string) => {
     signIn(provider, { callbackUrl: process.env.NEXT_PUBLIC_LOCAL_AUTH_URL });
@@ -41,10 +43,12 @@ const FormLogin = () => {
 
       if (status?.ok) {
         form.resetForm();
-        redirect(status?.url ?? '/');
+        router.push(status?.url || '/');
       }
     },
   });
+
+  useEmailLogin(form);
 
   return (
     <form className="flex flex-col gap-7" onSubmit={form.handleSubmit}>
