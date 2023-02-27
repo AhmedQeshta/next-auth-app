@@ -1,6 +1,6 @@
+import AuthProvider from '@/utils/providers/AuthProvider';
 import { Session } from 'next-auth';
 import { headers } from 'next/headers';
-import AuthContext from './AuthContext';
 import './globals.css';
 
 export interface IProps {
@@ -26,14 +26,10 @@ async function getSession(cookie: string): Promise<Session> {
 export default async function RootLayout({ children }: IProps) {
   const session = await getSession(headers().get('cookie') ?? '');
   return (
-    <html lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
+    <html lang="en" dir="ltr">
       <head />
       <body>
-        <AuthContext session={session}>{children}</AuthContext>
+        <AuthProvider session={session}>{children}</AuthProvider>
       </body>
     </html>
   );

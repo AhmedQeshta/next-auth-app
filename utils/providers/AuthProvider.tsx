@@ -8,6 +8,6 @@ export interface AuthContextProps {
   session: Session;
 }
 
-export default function AuthContext({ children, session }: AuthContextProps) {
+export default function AuthProvider({ children, session }: AuthContextProps) {
   return <SessionProvider session={session}>{children}</SessionProvider>;
 }
